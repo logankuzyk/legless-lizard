@@ -25,7 +25,7 @@ app.use(poweredByHandler);
 // Handle POST request to '/start'
 app.post("/start", (request, response) => {
   // NOTE: Do something here to start the game
-  return response.json({});
+  return response.status(200).json({});
 });
 
 // Handle POST request to '/move'
@@ -37,7 +37,7 @@ app.post("/move", (request, response) => {
     move: snake(request.body), // one of: ['up','down','left','right']
   };
 
-  return response.json(data);
+  return response.status(200).json(data);
 });
 
 app.post("/end", (request, response) => {
@@ -47,13 +47,13 @@ app.post("/end", (request, response) => {
 
 app.post("/", (request, response) => {
   // Used for checking if this snake is still alive.
-  return {
+  return response.status(200).json({
     apiversion: "1",
     author: "logankuzyk",
     color: "#FFFF00",
     head: "default",
     tail: "sharp",
-  };
+  });
 });
 
 // --- SNAKE LOGIC GOES ABOVE THIS LINE ---
