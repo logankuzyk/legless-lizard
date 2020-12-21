@@ -18,13 +18,13 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.19.4"
   },
   "main": "index.js",
   "engines": {
     "node": ">=10.0"
   },
   "scripts": {
-    "start": "cross-env PORT=5000 nodemon index.js"
+    "start": "cross-env PORT=5000 node index.js"
   }
 }
