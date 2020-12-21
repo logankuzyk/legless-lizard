@@ -11,7 +11,7 @@ let newStorage = [];
 class Thinking {
   constructor() {}
 
-  logProbabilities = function (apiRequest) {
+  logProbabilities = (apiRequest) => {
     for (let y = 0; y < apiRequest.board.width; y++) {
       let line = "";
       for (let x = 0; x < apiRequest.board.height; x++) {
@@ -27,7 +27,7 @@ class Thinking {
   };
 
   // Returns possible moves for given snake.
-  snakeOptions = function (coord, apiRequest) {
+  snakeOptions = (coord, apiRequest) => {
     let possibilities = ["down", "right", "left", "up"];
     let x = coord.x;
     let y = coord.y;
@@ -88,7 +88,7 @@ class Thinking {
     return possibilities;
   };
 
-  simulateHelper = function (apiRequest, move) {
+  simulateHelper = (apiRequest, move) => {
     if (typeof apiRequest == "string") {
       apiRequest = JSON.parse(apiRequest);
     }
@@ -211,7 +211,7 @@ class Thinking {
   };
 
   // Makes decision between simulated directions.
-  simulate = function (moves, apiRequest) {
+  simulate = (moves, apiRequest) => {
     let result = { left: 0, right: 0, down: 0, up: 0 };
     let final = [];
     let possible = this.snakeOptions(request.you.body[0], request);
@@ -255,7 +255,7 @@ class Thinking {
   // TODO: make it so that it only adds probability score to outer layer of blocks.
   // simulateHelper is the only other recursive function now, step should be checked compared to simulateHelper's iterations. Therefore iterations should be made global.
   // Doesn't downdate probability of coordinate itself but the 'free' ones around it.
-  downdateProbsHelper = function (coord, lastCoord, apiRequest, size) {
+  downdateProbsHelper = (coord, lastCoord, apiRequest, size) => {
     let moves = [
       { x: coord.x + 1, y: coord.y },
       { x: coord.x - 1, y: coord.y },
@@ -290,7 +290,7 @@ class Thinking {
     }
   };
 
-  downdateProbs = function (apiRequest) {
+  downdateProbs = (apiRequest) => {
     this.currentProbs(apiRequest);
     let lengths = {};
     if (iterations <= 1) {
@@ -335,7 +335,7 @@ class Thinking {
   };
 
   // downdates occdownied tiles of board to have 100% probability.
-  currentProbs = function (apiRequest) {
+  currentProbs = (apiRequest) => {
     for (let other of apiRequest.board.snakes) {
       for (let tile of other.body) {
         let x = tile.x;
@@ -349,7 +349,7 @@ class Thinking {
   };
 
   // Returns list of moves that are least likely to collide.
-  probabilityFlow = function (apiRequest) {
+  probabilityFlow = (apiRequest) => {
     let snake = apiRequest.you;
     // this.currentProbs(apiRequest)
     // this.downdateProbs(apiRequest)
@@ -407,7 +407,7 @@ class Thinking {
 // Feeling methods return suggestions. The only consquence of ignoring feeling methods is worse strategy, not death.
 class Feeling {
   // Returns a move going towards a given tile.
-  moveTowards({ x, y }) {
+  moveTowards = ({ x, y }) => {
     let want = [];
 
     if (request.you.body[0].x < x) {
@@ -431,9 +431,9 @@ class Feeling {
     }
 
     return want;
-  }
+  };
 
-  moveAway = function ({ x, y }) {
+  moveAway = ({ x, y }) => {
     let opp = this.moveTowards({ x, y });
     let want = ["right", "left", "down", "up"];
 
@@ -448,7 +448,7 @@ class Feeling {
   };
 
   // Returns moves attacking the closest smaller snake.
-  targetSnake = function () {
+  targetSnake = () => {
     let target = [request.you, 100];
     for (let snake of request.board.snakes) {
       if (
@@ -490,7 +490,7 @@ class Feeling {
   };
 
   // Returns directions to make snake go diagonally.
-  diagonal = function (snake) {
+  diagonal = (snake) => {
     let dir = this.snakeDirection(snake)[0];
 
     if (dir == "left") {
@@ -505,7 +505,7 @@ class Feeling {
   };
 
   // Returns direction snake went on the last turn.
-  snakeDirection = function (snake) {
+  snakeDirection = (snake) => {
     if (snake.body.length == 1) {
       return "right";
     }
@@ -533,7 +533,7 @@ class Feeling {
     }
   };
 
-  distanceBetween = function (coord1, coord2) {
+  distanceBetween = (coord1, coord2) => {
     let x1 = coord1.x;
     let x2 = coord2.x;
     let y1 = coord1.y;
@@ -542,7 +542,7 @@ class Feeling {
     return Math.sqrt((y1 - y2) ** 2 + (x1 - x2) ** 2);
   };
 
-  closestFood = function () {
+  closestFood = () => {
     let minDistance = 100; // TODO: make this unhard coded.
     let minFood = {};
 
@@ -564,7 +564,7 @@ class Feeling {
 }
 
 // Will return the best behavior mode for the situation. For example, attack, defense, grow, etc.
-function mood() {
+mood = () => {
   let feel = new Feeling();
 
   if (request.you.health < 60) {
@@ -574,9 +574,9 @@ function mood() {
   } else {
     mode = "hungry";
   }
-}
+};
 
-function brain() {
+brain = () => {
   let feel = new Feeling();
   let think = new Thinking();
   let possible = think.snakeOptions(request.you.body[0], request);
@@ -591,9 +591,9 @@ function brain() {
   } else {
     return possible[0];
   }
-}
+};
 
-module.exports = function (apiRequest) {
+module.exports = (apiRequest) => {
   request = apiRequest;
   request.board.possibilities = [];
   // console.log(request.you.body[0])
