@@ -45,7 +45,7 @@ app.post("/end", (request, response) => {
   return response.json({});
 });
 
-app.post("/", (request, response) => {
+app.get("/", (request, response) => {
   // Used for checking if this snake is still alive.
   return response.status(200).json({
     apiversion: "1",
